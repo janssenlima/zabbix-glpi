@@ -234,6 +234,11 @@ switch ($event) {
 
 							if (!empty($catarg)) $arg[] = $catarg;
 							if (!empty($watcherarg)) $arg[] = $watcherarg;
+							// Se voce nao quiser receber notificacoes dos chamados manipulados por webservice, comente as proximas tres linhas referente a estrutura if.
+                                                        if (str_replace(".", "", $webservices_version) >= '120') {
+                                                                $arg[] = "use_email_notification=1";
+                                                        }
+                                                        // comentar as 3 linhas acima se nao quiser receber notificacoes.
 							$response = getxml($arg);
 							unset($arg);
 							unset($response);
