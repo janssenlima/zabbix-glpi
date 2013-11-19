@@ -1,10 +1,10 @@
 <?php
 // ----------------------------------------------------------------------------------------
 // Autor: Janssen dos Reis Lima <janssenreislima@gmail.com>
-// Script:			tickets_zabbix_glpi.php
-// Localizacao:			/opt/zabbix/externalscripts/
-// Descricao:			Abrir e fechar tickets no GLPI de acordo com o status da trigger no Zabbix (OK/PROBLEM).
-// Dependencias:		GLPI Webservices plugin. Acesso remoto habilitado para o Mysql no servidor GLPI.
+// Script: tickets_zabbix_glpi.php
+// Localizacao: /opt/zabbix/externalscripts/
+// Descricao: Abrir e fechar tickets no GLPI de acordo com o status da trigger no Zabbix (OK/PROBLEM).
+// Dependencias: GLPI Webservices plugin. Acesso remoto habilitado para o Mysql no servidor GLPI.
 //
 // Variaveis requisitadas pelo script:
 //		eventhost={HOSTNAME}
@@ -69,10 +69,9 @@ function getxml($arg) {
 	if ($arg>1) {
 	   for ($i=0 ; $i<count($arg) ; $i++) {
 		  $it = explode("=",$arg[$i],2);
-		  //print_r($it);
 		  $it[0] = preg_replace('/^--/','',$it[0]);
-		  if (strpos($it[1],',') !== false) {  // if is_array
-			$it[1] = explode(",", $it[1]);  // then cast as array
+		  if (strpos($it[1],',') !== false) {
+			$it[1] = explode(",", $it[1]);
 		  }
 		  $args[$it[0]] = (isset($it[1]) ? $it[1] : true);
 	   }
@@ -239,26 +238,26 @@ switch ($event) {
 							unset($arg);
 							unset($response);
 
-							// Reconhece (ACK) o evento gerado no Zabbix.
-              $mysql = mysql_connect($sqlhost, $sqluser, $sqlpwd) or die(mysql_error());
-              mysql_select_db($sqldb) or die(mysql_error());
-              $consulta_evento = mysql_query("SELECT id FROM glpi_tickets WHERE name like '%$eventzabbix%'") or die(mysql_error());
-
-              $pega_id_ticket = mysql_fetch_array($consulta_evento);
-              $num_ticket = "{$pega_id_ticket['id']}";
-              sleep(10); //pausa de 10 segundos para dar tempo do ticket ser registrado no banco do GLPI. Se quiser, pode diminuir o tempo, porem pode ocorrer de nao registrar o ticket devido o ticket nao ter sido registrado no banco de dados.
-              $comando = "python $path_zabbix/ack_zabbix_glpi.py $eventzabbix $num_ticket";
-              $output = shell_exec($comando);
-              mysql_close($mysql);
+						      	// Reconhece (ACK) o evento gerado no Zabbix.
+					              	$mysql = mysql_connect($sqlhost, $sqluser, $sqlpwd) or die(mysql_error());
+					              	mysql_select_db($sqldb) or die(mysql_error());
+					              	$consulta_evento = mysql_query("SELECT id FROM glpi_tickets WHERE name like '%$eventzabbix%'") or die(mysql_error());
+					
+					              	$pega_id_ticket = mysql_fetch_array($consulta_evento);
+					              	$num_ticket = "{$pega_id_ticket['id']}";
+					              	sleep(10); //pausa de 10 segundos para dar tempo do ticket ser registrado no banco do GLPI. Se quiser, pode diminuir o tempo, porem pode ocorrer de nao registrar o ticket devido o ticket nao ter sido registrado no banco de dados.
+					              	$comando = "python $path_zabbix/ack_zabbix_glpi.py $eventzabbix $num_ticket";
+					              	$output = shell_exec($comando);
+					              	mysql_close($mysql);
 						
-						$arg[] = "method=glpi.doLogout";
-						$arg[] = "url=$xmlurl";
-						$arg[] = "host=$xmlhost";
-						$arg[] = "session=$session";
-
-						$response = getxml($arg);
-						unset($arg);
-						unset($response);
+							$arg[] = "method=glpi.doLogout";
+							$arg[] = "url=$xmlurl";
+							$arg[] = "host=$xmlhost";
+							$arg[] = "session=$session";
+	
+							$response = getxml($arg);
+							unset($arg);
+							unset($response);
 						}
 					}
 			}
