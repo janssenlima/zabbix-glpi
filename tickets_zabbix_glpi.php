@@ -149,7 +149,7 @@ switch ($event) {
 			mysql_close($mysql);
 			
 			// conteudo que sera gravado no followup do ticket. a variavel $content pode ser personalizada	
-			$content = "Trigger $servico normalizada. Registro fechado automaticamente atraves do evento $eventzabbix.";
+			$content = "$state: $servico. Registro fechado automaticamente atraves do evento $eventzabbix.";
 						
 			$arg[] = "method=glpi.addTicketFollowup";
 			$arg[] = "url=$xmlurl";
@@ -189,7 +189,7 @@ switch ($event) {
 						unset($response);
 						if (!empty($session)) {
 							
-							$title = "Status da trigger $servico com problema! - Evento $eventzabbix gerado automaticamente pelo Zabbix";
+							$title = "$state: $servico! - Evento $eventzabbix gerado automaticamente pelo Zabbix";
 							// Nao altere a variavel $content abaixoi, pois depende desses parametros para fechar o ticket quando a trigger voltar ao status normal.
 							$content = "Nome do host: $eventhost. ID da trigger: $triggerid. Status da trigger: $state.";
 							if ($category != ''){
