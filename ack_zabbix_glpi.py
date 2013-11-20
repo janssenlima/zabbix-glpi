@@ -5,14 +5,12 @@
 
 from zabbix_api import ZabbixAPI
 import sys
-import re
  
-server = "http://localhost/zabbix" #Endereco ou Ip do servidor do zabbix
-username = "admin"              #Usuario
+server = "http://localhost/zabbix" # Endereco ou Ip do servidor do zabbix
+username = "admin"              # Usuario
 password = "zabbix"     # Senha
  
-#Instanciando a API
-zapi = ZabbixAPI(server = server, path="", log_level=6)
-zapi.login(username, password)
+conexao = ZabbixAPI(server = server, path="", log_level=6)
+conexao.login(username, password)
 
-reconhecer_evento = zapi.event.acknowledge({"eventids": sys.argv[1], "message": "Ticket " + str(sys.argv[2]) + " criado no GLPI."})
+reconhecer_evento = conexao.event.acknowledge({"eventids": sys.argv[1], "message": "Ticket " + str(sys.argv[2]) + " criado no GLPI."})
