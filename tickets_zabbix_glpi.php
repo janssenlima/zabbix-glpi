@@ -34,9 +34,9 @@ $sqldb = 	"glpidb";					// Nome do bando de dados
 $sqluser =  	"glpiuser";                             	// Usuario MySQL com acesso a base do GLPI
 $sqlpwd =   	"glpiwd";                        		// Senha usuario MySQL
 $path_zabbix = 	"/opt/zabbix/externalscripts";			// Diretorio onde estao os scripts necessarios para a integracao
-// -----------------------------------------------------------------------------------------
-// ATENCAO: Cuidado ao alterar o codigo abaixo.
-// -----------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------
+// ATENCAO: Nao altere o codigo abaixo, a nao ser que voce deseja modificar as frases de abertura e fechamento dos tickets.
+// ------------------------------------------------------------------------------------------------------------------------
 
 $arg[] = "method=glpi.test";
 $arg[] = "url=$xmlurl";
