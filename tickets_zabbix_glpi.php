@@ -22,14 +22,14 @@
 // -----------------------------------------------------------------------------------------
 // Configuracoes:
 // -----------------------------------------------------------------------------------------
-$user =     	"glpi";						// Conta do usuario GLPI
-$password = 	"glpi";						// Senha do usuario GLPI   
-$xmlhost =  	"192.168.0.1";					// IP do Servidor GLPI - Tem que ser o IP.
+$user =     	"glpi";						// Conta do usuario GLPI.
+$password = 	"glpi";						// Senha do usuario GLPI.  
+$xmlhost =  	"localhost";					// IP ou hostname do Servidor GLPI - cuidado com a resolucao de nomes.
 $xmlurl =   	"glpi/plugins/webservices/xmlrpc.php";		// Diretorio para o xmlrpc no servidor GLPI
 $category = 	"";						// Nao altere essa variavel. Necessaria para o Webservices. 
 $watcher = 	"2";						// Nao altere essa variavel. Necessaria para o Webservices.
 $watchergroup = "1";						// Nao altere essa variavel. Necessaria para o Webservices.
-$sqlhost = 	"localhost";					// Altere caso o seu banco de dados estiver em outro host.
+$sqlhost = 	"localhost";					// IP ou hostname do servidor do banco de dados do GLPI
 $sqldb = 	"glpidb";					// Nome do bando de dados
 $sqluser =  	"glpiuser";                             	// Usuario MySQL com acesso a base do GLPI
 $sqlpwd =   	"glpiwd";                        		// Senha usuario MySQL
