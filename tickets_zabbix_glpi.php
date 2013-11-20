@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------------------------
 // Autor: Janssen dos Reis Lima <janssenreislima@gmail.com>
 // Script: tickets_zabbix_glpi.php
-// Localizacao: /opt/zabbix/externalscripts/
+// Ultima Atualizacao: 20/11/2013
 // Descricao: Abrir e fechar tickets no GLPI de acordo com o status da trigger no Zabbix (OK/PROBLEM).
 // Dependencias: GLPI Webservices plugin. Acesso remoto habilitado para o Mysql no servidor GLPI.
 //
