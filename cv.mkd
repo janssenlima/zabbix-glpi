@@ -1,7 +1,8 @@
 Vaga
 ====
 
-+* Área de Infraestrutura <br>
+- Área de Infraestrutura <br>
+- Teste
 
 __Dicas:__
 * Escolher uma ou mais vagas disponíveis é importante. Se você não escolher uma vaga, é provável que ninguém olhe pro seu CV.
