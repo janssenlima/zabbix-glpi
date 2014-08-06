@@ -157,6 +157,7 @@ switch ($event) {
 			$arg[] = "session=$session";
 			$arg[] = "ticket=$num_ticket";
 			$arg[] = "content=$content";
+			$arg[] = "close=close";
 			$resp = getxml($arg);
 			unset($arg);
 			unset($resp);
