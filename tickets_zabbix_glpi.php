@@ -2,7 +2,8 @@
 // ----------------------------------------------------------------------------------------
 // Autor: Janssen dos Reis Lima <janssenreislima@gmail.com>
 // Script: tickets_zabbix_glpi.php
-// Ultima Atualizacao: 20/11/2013
+// Ultima Atualizacao: 15/08/2014
+// Versao: 0.3b
 // Descricao: Abrir e fechar tickets no GLPI de acordo com o status da trigger no Zabbix (OK/PROBLEM).
 // Dependencias: GLPI Webservices plugin. Acesso remoto habilitado para o Mysql no servidor GLPI.
 //
@@ -191,7 +192,7 @@ switch ($event) {
 						if (!empty($session)) {
 							
 							$title = "$state: $servico! - Evento $eventzabbix gerado automaticamente pelo Zabbix";
-							// Nao altere a variavel $content abaixoi, pois depende desses parametros para fechar o ticket quando a trigger voltar ao status normal.
+							// Nao altere a variavel $content abaixo, pois depende desses parametros para fechar o ticket quando a trigger voltar ao status normal.
 							$content = "Nome do host: $eventhost. ID da trigger: $triggerid. Status da trigger: $state.";
 							if ($category != ''){
 								$arg[] = "method=glpi.listDropdownValues";
@@ -231,7 +232,8 @@ switch ($event) {
 							$arg[] = "session=$session";
 							$arg[] = "title=$title";
 							$arg[] = "content=$content";
-							$arg[] = "urgancy=5";
+							$arg[] = "urgency=5";
+							$arg[] = "status=1";
 
 							if (!empty($catarg)) $arg[] = $catarg;
 							if (!empty($watcherarg)) $arg[] = $watcherarg;
