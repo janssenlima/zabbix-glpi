@@ -1,7 +1,7 @@
 zabbix-glpi
 ===========
 
-Python and PHP scripts for integration between Zabbix and GLPI.
+Python scripts for integration between Zabbix and GLPI. Under development
 
 The proposal is automatically open/close tickets in the GLPI and acknowledge the event in Zabbix Web interface using API.
 
