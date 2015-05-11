@@ -2,39 +2,27 @@
 // ----------------------------------------------------------------------------------------
 // Autor: Janssen dos Reis Lima <janssenreislima@gmail.com>
 // Script: tickets_zabbix_glpi.php
-// Ultima Atualizacao: 15/08/2014
+// Ultima Atualizacao: 11/05/2015
 // Versao: 0.3b
 // Descricao: Abrir e fechar tickets no GLPI de acordo com o status da trigger no Zabbix (OK/PROBLEM).
 // Dependencias: GLPI Webservices plugin. Acesso remoto habilitado para o Mysql no servidor GLPI.
-//
-// Variaveis requisitadas pelo script:
-//		eventhost={HOSTNAME}
-//		event=<DOWN> ou <UP>
-//		state=<OK> ou <PROBLEM>
-//		hostproblemid=<0> ou <1> - 0=abrir chamado 1=fechar chamado
-//		lasthostproblemid=<0> ou <1> - 0=abrir chamado 1=fechar chamado
-//		servico={TRIGGER.NAME}
-//		eventzabbix={EVENT.ID}
-//		triggerid={TRIGGER>ID}
-//
-// Obs.: Variaveis entre <> devem ser apenas uma das opcoes; variaveis entre {} sao macros do Zabbix. Nao se preocupe com as variaveis, pois o Zabbix ja envia tudo certinho. Ao menos se voce deseja testar a execucao manualmente.
-// Creditos: http://homeofdrock.com/2012/10/22/glpi-integration-with-nagios/
+
 
 // -----------------------------------------------------------------------------------------
 // Configuracoes:
 // -----------------------------------------------------------------------------------------
-$user =     	"glpi";						// Conta do usuario GLPI.
-$password = 	"glpi";						// Senha do usuario GLPI.  
-$xmlhost =  	"localhost";					// IP ou hostname do Servidor GLPI - cuidado com a resolucao de nomes.
-$xmlurl =   	"glpi/plugins/webservices/xmlrpc.php";		// Diretorio para o xmlrpc no servidor GLPI
-$category = 	"";						// Nao altere essa variavel. Necessaria para o Webservices. 
-$watcher = 	"2";						// Nao altere essa variavel. Necessaria para o Webservices.
-$watchergroup = "1";						// Nao altere essa variavel. Necessaria para o Webservices.
-$sqlhost = 	"localhost";					// IP ou hostname do servidor do banco de dados do GLPI
-$sqldb = 	"glpidb";					// Nome do bando de dados
-$sqluser =  	"glpiuser";                             	// Usuario MySQL com acesso a base do GLPI
-$sqlpwd =   	"glpiwd";                        		// Senha usuario MySQL
-$path_zabbix = 	"/opt/zabbix/externalscripts";			// Diretorio onde estao os scripts necessarios para a integracao
+$user =     	"glpi";						
+$password = 	"glpi";						
+$xmlhost =  	"localhost";					
+$xmlurl =   	"glpi/plugins/webservices/xmlrpc.php";		
+$category = 	"";						
+$watcher = 	"2";						
+$watchergroup = "1";						
+$sqlhost = 	"localhost";					
+$sqldb = 	"glpidb";					
+$sqluser =  	"glpiuser";                             	
+$sqlpwd =   	"glpiwd";                        		
+$path_zabbix = 	"/opt/zabbix/externalscripts";			
 // ------------------------------------------------------------------------------------------------------------------------
 // ATENCAO: Nao altere o codigo abaixo, a nao ser que voce deseja modificar as frases de abertura e fechamento dos tickets.
 // ------------------------------------------------------------------------------------------------------------------------
@@ -123,153 +111,4 @@ function getxml($arg) {
 if (!extension_loaded("xmlrpc")) {
    die("Extension xmlrpc not loaded\n");
 }
-
-# Seleciona o evento UP ou DOWN
-switch ($event) {
-	case "UP":
-		# Se o evento for UP, eh porque o status da trigger esta normalizado (OK), entao vamos fechar o registro no GLPI.
-		if ($lasthostproblemid != 0) { 
-			$arg[] = "method=glpi.doLogin";
-			$arg[] = "url=$xmlurl";
-			$arg[] = "host=$xmlhost";
-			$arg[] = "login_password=$password";
-			$arg[] = "login_name=$user";
-
-			$response = getxml($arg);
-			$session = $response['session'];
-			
-			$mysql = mysql_connect($sqlhost, $sqluser, $sqlpwd) or die(mysql_error());
-      mysql_select_db($sqldb) or die(mysql_error());
-			$consulta_chamado = mysql_query("SELECT id FROM glpi_tickets WHERE status <> 5 AND name like '%$eventhost%' AND content like '%$triggerid%'");
-
-			$pega_id_ticket = mysql_fetch_array($consulta_chamado);
-			$num_ticket = "{$pega_id_ticket['id']}";
-
-			mysql_query("UPDATE glpi_tickets SET status='5' WHERE id='$num_ticket'") or die(mysql_error());
-
-			mysql_close($mysql);
-			
-			// conteudo que sera gravado no followup do ticket. a variavel $content pode ser personalizada	
-			$content = "$state: $servico. Registro fechado automaticamente atraves do evento $eventzabbix.";
-						
-			$arg[] = "method=glpi.addTicketFollowup";
-			$arg[] = "url=$xmlurl";
-			$arg[] = "host=$xmlhost";
-			$arg[] = "session=$session";
-			$arg[] = "ticket=$num_ticket";
-			$arg[] = "content=$content";
-			$arg[] = "close=close";
-			$resp = getxml($arg);
-			unset($arg);
-			unset($resp);
-			
-			$arg[] = "method=glpi.doLogout";
-			$arg[] = "url=$xmlurl";
-			$arg[] = "host=$xmlhost";
-			$arg[] = "session=$session";
-
-			$response = getxml($arg);
-			unset($arg);
-			unset($response);
-		}
-		
-	case "DOWN":
-		# Abre o ticket caso o evento chegar como DOWN, ou seja, estiver com problema. Futuramente, poderemos incluir outros tipos de eventos e status.
-			switch ($state) {
-				case "PROBLEM":
-					if ($lasthostproblemid != 1) {
-						$arg[] = "method=glpi.doLogin";
-						$arg[] = "url=$xmlurl";
-						$arg[] = "host=$xmlhost";
-						$arg[] = "login_password=$password";
-						$arg[] = "login_name=$user";
-
-						$response = getxml($arg);
-						$session = $response['session'];
-
-						unset($arg);
-						unset($response);
-						if (!empty($session)) {
-							
-							$title = "$state: $servico! - Evento $eventzabbix gerado automaticamente pelo Zabbix";
-							// Nao altere a variavel $content abaixo, pois depende desses parametros para fechar o ticket quando a trigger voltar ao status normal.
-							$content = "Nome do host: $eventhost. ID da trigger: $triggerid. Status da trigger: $state.";
-							if ($category != ''){
-								$arg[] = "method=glpi.listDropdownValues";
-								$arg[] = "url=$xmlurl";
-								$arg[] = "host=$xmlhost";
-								$arg[] = "session=$session";
-								$arg[] = "dropdown=itilcategories";
-								$arg[] = "name=$category";
-								$response = getxml($arg);
-								$categoryid = $response[0]['id'];
-								unset($arg);
-								$catarg = "category=$categoryid";
-							}
-							if (!empty($watcher)) {
-								$watcherarg = "observer=$watcher";
-							} elseif (!empty($watchergroup)) {
-								$arg[] = "method=glpi.listUsers";
-								$arg[] = "url=$xmlurl";
-								$arg[] = "host=$xmlhost";
-								$arg[] = "session=$session";
-								$arg[] = "group=$watchergroup";
-								$response = getxml($arg);
-								foreach($response as $user){
-									$watcherids .= $user['id'].",";
-								}
-								$watcherids = rtrim($watcherids, ",");
-								$watcherarg = "observer=$watcherids";
-								unset($arg);
-							} else {
-								// uso futuro
-							}
-							
-							
-							$arg[] = "method=glpi.createTicket";
-							$arg[] = "url=$xmlurl";
-							$arg[] = "host=$xmlhost";
-							$arg[] = "session=$session";
-							$arg[] = "title=$title";
-							$arg[] = "content=$content";
-							$arg[] = "urgency=5";
-							$arg[] = "status=1";
-
-							if (!empty($catarg)) $arg[] = $catarg;
-							if (!empty($watcherarg)) $arg[] = $watcherarg;
-							// Se voce nao quiser receber notificacoes dos chamados manipulados por webservice, comente as proximas tres linhas referente a estrutura if.
-                                                        if (str_replace(".", "", $webservices_version) >= '120') {
-                                                                $arg[] = "use_email_notification=1";
-                                                        }
-                                                        // comentar as 3 linhas acima se nao quiser receber notificacoes.
-							$response = getxml($arg);
-							unset($arg);
-							unset($response);
-
-						      	// Reconhece (ACK) o evento gerado no Zabbix.
-					              	$mysql = mysql_connect($sqlhost, $sqluser, $sqlpwd) or die(mysql_error());
-					              	mysql_select_db($sqldb) or die(mysql_error());
-					              	$consulta_evento = mysql_query("SELECT id FROM glpi_tickets WHERE name like '%$eventzabbix%'") or die(mysql_error());
-					
-					              	$pega_id_ticket = mysql_fetch_array($consulta_evento);
-					              	$num_ticket = "{$pega_id_ticket['id']}";
-					              	sleep(10); //pausa de 10 segundos para dar tempo do ticket ser registrado no banco do GLPI. Se quiser, pode diminuir o tempo, porem pode ocorrer de nao registrar o ticket devido o ticket nao ter sido registrado no banco de dados.
-					              	$comando = "python $path_zabbix/ack_zabbix_glpi.py $eventzabbix $num_ticket";
-					              	$output = shell_exec($comando);
-					              	mysql_close($mysql);
-						
-							$arg[] = "method=glpi.doLogout";
-							$arg[] = "url=$xmlurl";
-							$arg[] = "host=$xmlhost";
-							$arg[] = "session=$session";
-	
-							$response = getxml($arg);
-							unset($arg);
-							unset($response);
-						}
-					}
-			}
-}
-
-
 ?>
