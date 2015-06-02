@@ -12,9 +12,11 @@ Requirements
 - Zabbix 2.2 or higher
 - GLPI 0.84.3 or higher
 - Plugin Webservices 1.4 or higher
+- API Zabbix development in Python, just execute in terminal -> # pip install zabbix-api
 
 Support
 ========
 
 - http://blog.janssenlima.com
+- contato@janssenlima.com
 - janssenreislima@gmail.com
