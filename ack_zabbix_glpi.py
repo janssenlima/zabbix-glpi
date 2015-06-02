@@ -1,6 +1,5 @@
-## Autor: Janssen dos Reis Lima <janssenreislima@gmail.com>
-## Ultima atualizacao: 11/05/2015
-## Execucao: python ack_zabbix_glpi.py <eventid> <ticket_glpi>
+## Autor: Janssen dos Reis Lima <contato@janssenlima.com / janssenreislima@gmail.com>
+## Ultima atualizacao: 02/06/2015
 ## Observacoes: Este script eh executado automaticamente apos a abertura do ticket no GLPI
 
 from zabbix_api import ZabbixAPI
