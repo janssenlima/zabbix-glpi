@@ -17,6 +17,5 @@ Requirements
 Support
 ========
 
-- http://blog.janssenlima.com
-- contato@janssenlima.com
+- http://janssenlima.blogspot.com
 - janssenreislima@gmail.com
