@@ -9,9 +9,11 @@ More information about implementing this solution can be found on my blog: http:
 
 Requirements
 ========
-- Zabbix 2.2 or higher
-- GLPI 0.84.3 or higher
-- Plugin Webservices 1.4 or higher
+- Zabbix 2.2 or higher (tested with Zabbix 2.4 and Zabbix 3)
+- GLPI 0.90
+- Plugin Webservices 1.6
+- PHP 5.6.17
+- Python 2.7
 - API Zabbix development in Python, just execute in terminal -> # pip install zabbix-api
 
 Support
