@@ -1,8 +1,8 @@
 <?php
 // ----------------------------------------------------------------------------------------
-// Autor: Janssen dos Reis Lima <contato@janssenlima.com / janssenreislima@gmail.com>
+// Autor: Janssen dos Reis Lima <janssenreislima@gmail.com>
 // Script: tickets_zabbix_glpi.php
-// Ultima Atualizacao: 02/06/2015
+// Ultima Atualizacao: 18/02/2016
 
 // -----------------------------------------------------------------------------------------
 // Configuracoes:
@@ -15,10 +15,10 @@ $category = 	"";
 $watcher = 	"2";						
 $watchergroup = "1";						
 $sqlhost = 	"localhost";					
-$sqldb = 	"glpidb";					
-$sqluser =  	"glpiuser";                             	
-$sqlpwd =   	"glpiwd";                        		
-$path_zabbix = 	"/opt/zabbix/externalscripts";			
+$sqldb = 	"glpi";					
+$sqluser =  	"glpi";                             	
+$sqlpwd =   	"glpi";                        		
+$path_zabbix = 	"/usr/lib/zabbix/externalscripts";			
 // ------------------------------------------------------------------------------------------------------------------------
 
 $arg[] = "method=glpi.test";
@@ -74,8 +74,8 @@ function getxml($arg) {
 	
 	$request = xmlrpc_encode_request($method, $args);
 	$context = stream_context_create(array('http' => array('method'  => "POST",
-														   'header'  => $header,
-														   'content' => $request)));
+								'header'  => $header,
+								'content' => $request)));
 
 	$file = file_get_contents("http://$host/$url", false, $context);
 	if (!$file) {
@@ -125,10 +125,6 @@ switch ($event) {
 			$pega_id_ticket = mysql_fetch_array($consulta_chamado);
 			$num_ticket = "{$pega_id_ticket['id']}";
 
-			mysql_query("UPDATE glpi_tickets SET status='5' WHERE id='$num_ticket'") or die(mysql_error());
-
-			mysql_close($mysql);
-			
 			$content = "$state: $servico. Registro fechado automaticamente atraves do evento $eventzabbix.";
 						
 			$arg[] = "method=glpi.addTicketFollowup";
@@ -140,7 +136,10 @@ switch ($event) {
 			$resp = getxml($arg);
 			unset($arg);
 			unset($resp);
-			
+
+			mysql_query("UPDATE glpi_tickets SET status='5' WHERE id='$num_ticket'") or die(mysql_error());
+			mysql_close($mysql);
+
 			$arg[] = "method=glpi.doLogout";
 			$arg[] = "url=$xmlurl";
 			$arg[] = "host=$xmlhost";
