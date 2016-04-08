@@ -16,6 +16,8 @@ Requirements
 - Python 2.7
 - API Zabbix development in Python, just execute in terminal -> # pip install zabbix-api
 
+**Note**: Tested and running on Debian (7, 8) and CentOS 7, both 64 bit.
+
 Support
 ========
 
