@@ -1,4 +1,4 @@
-## Autor: Janssen dos Reis Lima <contato@janssenlima.com / janssenreislima@gmail.com>
+## Autor: Janssen dos Reis Lima / janssenreislima@gmail.com>
 ## Ultima atualizacao: 18/02/2016
 ## Observacoes: Este script eh executado automaticamente apos a abertura do ticket no GLPI
 
