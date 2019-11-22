@@ -7,6 +7,8 @@ The proposal is automatically open/close tickets in the GLPI and acknowledge the
 
 More information about implementing this solution can be found on my blog: http://janssenlima.blogspot.com/2013/11/integracao-zabbix-glpi.html
 
+Videos about how integration works: http://bit.ly/zabbix_glpi
+
 Requirements
 ========
 - Zabbix 2.2 or higher (tested with Zabbix 2.4 and Zabbix 3.x)
@@ -21,5 +23,4 @@ Requirements
 Support
 ========
 
-- http://janssenlima.blogspot.com
-- janssenreislima@gmail.com
+- End of support - nov/2019
