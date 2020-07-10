@@ -118,11 +118,11 @@ switch ($event) {
 			$response = getxml($arg);
 			$session = $response['session'];
 			
-			$mysql = mysql_connect($sqlhost, $sqluser, $sqlpwd) or die(mysql_error());
-      mysql_select_db($sqldb) or die(mysql_error());
-			$consulta_chamado = mysql_query("SELECT id FROM glpi_tickets WHERE status <> 5 AND content like '%$triggerid%'");
+			$mysql = mysqli_connect($sqlhost, $sqluser, $sqlpwd) or die(mysqli_error());
+      mysqli_select_db($mysql,$sqldb) or die(mysqli_error());
+			$consulta_chamado = mysqli_query($mysql,"SELECT id FROM glpi_tickets WHERE status <> 5 AND content like '%$triggerid%'");
 
-			$pega_id_ticket = mysql_fetch_array($consulta_chamado);
+			$pega_id_ticket = mysqli_fetch_array($consulta_chamado);
 			$num_ticket = "{$pega_id_ticket['id']}";
 
 			$content = "$state: $servico. Registro fechado automaticamente atraves do evento $eventzabbix.";
@@ -137,8 +137,8 @@ switch ($event) {
 			unset($arg);
 			unset($resp);
 
-			mysql_query("UPDATE glpi_tickets SET status='5' WHERE id='$num_ticket'") or die(mysql_error());
-			mysql_close($mysql);
+			mysqli_query($mysql,"UPDATE glpi_tickets SET status='5' WHERE id='$num_ticket'") or die(mysqli_error());
+			mysqli_close($mysql);
 
 			$arg[] = "method=glpi.doLogout";
 			$arg[] = "url=$xmlurl";
@@ -217,16 +217,16 @@ switch ($event) {
 							unset($arg);
 							unset($response);
 
-					              	$mysql = mysql_connect($sqlhost, $sqluser, $sqlpwd) or die(mysql_error());
-					              	mysql_select_db($sqldb) or die(mysql_error());
-					              	$consulta_evento = mysql_query("SELECT id FROM glpi_tickets WHERE name like '%$eventzabbix%'") or die(mysql_error());
+					              	$mysql = mysqli_connect($sqlhost, $sqluser, $sqlpwd) or die(mysqli_error());
+					              	mysqli_select_db($mysql,$sqldb) or die(mysqli_error());
+					              	$consulta_evento = mysqli_query($mysql"SELECT id FROM glpi_tickets WHERE name like '%$eventzabbix%'") or die(mysqli_error());
 					
-					              	$pega_id_ticket = mysql_fetch_array($consulta_evento);
+					              	$pega_id_ticket = mysqli_fetch_array($consulta_evento);
 					              	$num_ticket = "{$pega_id_ticket['id']}";
 					              	sleep(10);
 					              	$comando = "python $path_zabbix/ack_zabbix_glpi.py $eventzabbix $num_ticket";
 					              	$output = shell_exec($comando);
-					              	mysql_close($mysql);
+					              	mysqli_close($mysql);
 						
 							$arg[] = "method=glpi.doLogout";
 							$arg[] = "url=$xmlurl";
