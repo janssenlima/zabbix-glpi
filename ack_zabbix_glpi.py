@@ -12,4 +12,4 @@ password = "zabbix"
 conexao = ZabbixAPI(server = server)
 conexao.login(username, password)
 
-reconhecer_evento = conexao.event.acknowledge({"eventids": sys.argv[1], "message": "Ticket " + str(sys.argv[2]) + " criado no GLPI."})
+reconhecer_evento = conexao.event.acknowledge({"eventids": sys.argv[1], "action": 6 , "message": "Ticket " + str(sys.argv[2]) + " criado no GLPI."})
