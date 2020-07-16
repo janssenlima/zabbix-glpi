@@ -11,7 +11,7 @@ Videos about how integration works: http://bit.ly/zabbix_glpi
 
 Requirements
 ========
-- Zabbix 2.2 or higher (tested with Zabbix 2.4 and Zabbix 3.x)
+- Zabbix 4.x or higher
 - GLPI 0.85.3 ~ 0.90 (does not work with 0.90.1) with Plugin Webservices 1.6.0, available in https://forge.glpi-project.org/projects/webservices/files
 - GLPI 9.1 with Plugin Webservices 1.6.1 (modified by Stevenes/), available in https://sourceforge.net/projects/glpiwebservices/
 - PHP 5.6.17
@@ -24,3 +24,4 @@ Support
 ========
 
 - End of support - nov/2019
+- Only pull requests will be verified.
